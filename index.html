@@ -1,0 +1,305 @@
+<!doctype html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>בודק דירות</title>
+<meta name="theme-color" content="#0f5c55">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;600;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#eef4f5; --card:#ffffff; --ink:#1d2830; --soft:#4d5a63; --line:#ccd8da;
+  --teal:#0f5c55; --teal-dark:#0a423d; --good:#1b6b36; --mid:#8a5200; --bad:#a3231b;
+  --good-bg:#e4f2e8; --mid-bg:#fbefd9; --bad-bg:#f9e2df;
+}
+*{box-sizing:border-box}
+html{font-size:100%}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:"Heebo",system-ui,Arial,sans-serif;font-size:1.25rem;line-height:1.6;-webkit-text-size-adjust:100%}
+main{max-width:34rem;margin:0 auto;padding:1.5rem 1.1rem 4rem}
+h1{font-size:2rem;font-weight:800;line-height:1.2;margin:0 0 .4rem;text-wrap:balance}
+h2{font-size:1.45rem;font-weight:800;margin:2.4rem 0 .7rem;line-height:1.25}
+p{margin:0 0 1rem;max-width:36ch}
+.lead{color:var(--soft);margin-bottom:1.6rem}
+label,.lab{display:block;font-weight:600;margin:0 0 .35rem}
+textarea,input[type=text],input[type=number],select{
+  width:100%;font:inherit;color:var(--ink);background:var(--card);border:2px solid var(--line);border-radius:.7rem;padding:.8rem .9rem;min-height:3.4rem}
+textarea{min-height:12rem;resize:vertical;line-height:1.5}
+::placeholder{color:#6b7780}
+::selection{background:#bfe3dd;color:var(--ink)}
+:focus-visible{outline:3px solid var(--teal);outline-offset:2px}
+textarea:focus,input:focus,select:focus{border-color:var(--teal);outline:3px solid #bfe3dd;outline-offset:0}
+.btn{display:flex;align-items:center;justify-content:center;gap:.6rem;width:100%;min-height:3.8rem;border:0;border-radius:.9rem;font:inherit;font-weight:800;font-size:1.3rem;cursor:pointer;background:var(--teal);color:#fff;text-decoration:none;padding:.5rem 1rem;box-shadow:0 2px 0 var(--teal-dark),0 6px 14px rgba(15,92,85,.18);transition:transform .15s cubic-bezier(.2,.8,.2,1),box-shadow .15s}
+.btn:hover{background:var(--teal-dark)}
+.btn:active{transform:translateY(2px);box-shadow:0 0 0 var(--teal-dark)}
+.btn.ghost{background:var(--card);color:var(--teal-dark);border:2px solid var(--teal);box-shadow:none}
+.btn.ghost:hover{background:#eaf4f2}
+.btn[disabled],.btn.off{background:#c9cfd2;color:#4d5a63;box-shadow:none;cursor:not-allowed;pointer-events:none}
+.btn svg{width:1.5rem;height:1.5rem;flex:none}
+.stack>*+*{margin-top:.8rem}
+.photos{display:flex;gap:.7rem;flex-wrap:wrap;margin-top:.8rem}
+.photos img{width:7.2rem;height:7.2rem;object-fit:cover;border-radius:.7rem;border:2px solid var(--line)}
+.photo-add{margin-top:.2rem}
+.fine{font-size:1rem;color:var(--soft);margin-top:.5rem}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:.9rem}
+.grid .wide{grid-column:1/-1}
+.check{display:flex;align-items:center;gap:.7rem;min-height:3.4rem;font-weight:600}
+.check input{width:1.7rem;height:1.7rem;accent-color:var(--teal)}
+.score{border-radius:1.1rem;padding:1.2rem 1.2rem 1.3rem;margin-top:1rem}
+.score.good{background:var(--good-bg);color:var(--good)}
+.score.mid{background:var(--mid-bg);color:var(--mid)}
+.score.bad{background:var(--bad-bg);color:var(--bad)}
+.score .num{font-size:4.6rem;font-weight:800;line-height:1;font-variant-numeric:tabular-nums}
+.score .num small{font-size:1.6rem;font-weight:600;margin-inline-start:.3rem}
+.score .verdict{font-size:1.6rem;font-weight:800;margin-top:.3rem}
+.bar{display:flex;gap:.25rem;margin-top:.9rem}
+.bar i{flex:1;height:.6rem;border-radius:.3rem;background:currentColor;opacity:.2}
+.bar i.on{opacity:1}
+.why{padding:0;margin:1.2rem 0 0;list-style:none;color:var(--ink)}
+.why li{padding:.65rem 0;border-top:1px solid var(--line)}
+.why li:first-child{border-top:0}
+.msg{background:var(--card);border:2px solid var(--line);border-radius:.9rem;padding:1rem;white-space:pre-wrap;line-height:1.55;margin-bottom:1rem}
+.hist{list-style:none;margin:0;padding:0}
+.hist li{display:flex;align-items:center;gap:1rem;padding:.8rem 0;border-top:1px solid var(--line)}
+.hist .s{font-size:1.8rem;font-weight:800;min-width:3.2rem;text-align:center;font-variant-numeric:tabular-nums}
+.hist .t{flex:1}
+.hist .t b{display:block}
+.hist .t span{color:var(--soft);font-size:1rem}
+.hist .s.good{color:var(--good)}.hist .s.mid{color:var(--mid)}.hist .s.bad{color:var(--bad)}
+.hidden{display:none}
+.note{background:var(--mid-bg);color:#5c3700;border-radius:.7rem;padding:.8rem 1rem;font-size:1.05rem;margin-top:.8rem}
+@media (prefers-reduced-motion:no-preference){
+  .reveal{animation:rise .5s cubic-bezier(.16,1,.3,1)}
+  @keyframes rise{from{opacity:.001;transform:translateY(14px)}to{opacity:1;transform:none}}
+}
+</style>
+</head>
+<body>
+<main>
+  <h1>בודק דירות</h1>
+  <p class="lead">מדביקים את המודעה, ומקבלים ציון כדאיות והודעה מוכנה למתווך.</p>
+
+  <section id="inputSec">
+    <label for="ad">הדביקו כאן את המודעה</label>
+    <textarea id="ad" placeholder="לדוגמה: דירת 3 חדרים, כ-78 מ&quot;ר, קומה 2 מתוך 4, מעלית... מחיר 1,710,000. לפרטים 052-1234567"></textarea>
+
+    <div class="photo-add stack">
+      <label class="btn ghost" for="photos" style="margin-top:1rem">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 8h3l2-3h6l2 3h3v11H4z"/><circle cx="12" cy="13" r="3.5"/></svg>
+        הוספת תמונה (אפשר עד 2)
+      </label>
+      <input id="photos" type="file" accept="image/*" multiple class="hidden">
+      <div class="photos" id="photoRow"></div>
+      <p class="fine">התמונות נשארות רק בטלפון שלכם ומוצגות כאן לזכרון. הציון מבוסס על הנתונים במודעה.</p>
+    </div>
+
+    <button class="btn" id="go" type="button" style="margin-top:1.2rem">בדקו כדאיות</button>
+  </section>
+
+  <section id="resSec" class="hidden reveal" aria-live="polite">
+    <h2>מה הבנתי מהמודעה</h2>
+    <p class="fine" style="margin-top:-.3rem">אם משהו לא נכון, תקנו כאן והציון יתעדכן.</p>
+    <div class="grid">
+      <div class="wide"><label for="f_addr">כתובת</label><input id="f_addr" type="text"></div>
+      <div><label for="f_price">מחיר (₪)</label><input id="f_price" type="number" inputmode="numeric"></div>
+      <div><label for="f_sqm">מ"ר</label><input id="f_sqm" type="number" inputmode="numeric"></div>
+      <div><label for="f_rooms">חדרים</label><input id="f_rooms" type="number" step="0.5" inputmode="decimal"></div>
+      <div><label for="f_floor">קומה</label><input id="f_floor" type="number" inputmode="numeric" placeholder="0 = קרקע"></div>
+      <div class="wide"><label for="f_hood">שכונה</label><select id="f_hood"></select></div>
+      <div class="wide"><label for="f_cond">מצב הדירה</label>
+        <select id="f_cond"><option value="reno">משופצת</option><option value="ok">במצב טוב</option><option value="need">דרוש שיפוץ</option><option value="unk">לא כתוב</option></select></div>
+      <div><label for="f_rent">שכירות חודשית (₪)</label><input id="f_rent" type="number" inputmode="numeric" placeholder="אם מושכרת"></div>
+      <div class="check"><input id="f_lift" type="checkbox"><label for="f_lift" style="margin:0">יש מעלית</label></div>
+      <div class="wide"><label for="f_phone">טלפון של המתווך</label><input id="f_phone" type="text" inputmode="tel" placeholder="052-1234567"></div>
+    </div>
+
+    <h2>הציון</h2>
+    <div id="score" class="score"></div>
+    <ul class="why" id="why"></ul>
+
+    <h2>הודעה למתווך</h2>
+    <div class="stack">
+      <label for="f_name">השם שלכם (יופיע בסוף ההודעה)</label>
+      <input id="f_name" type="text">
+    </div>
+    <div class="msg" id="msg" style="margin-top:1rem"></div>
+    <div class="stack">
+      <a class="btn" id="wa" href="#" target="_blank" rel="noopener">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 20l1.3-4.2A8 8 0 1 1 8.4 18.8z"/></svg>
+        שליחה בוואטסאפ
+      </a>
+      <button class="btn ghost" id="copy" type="button">העתקת ההודעה</button>
+      <p class="fine" id="waNote"></p>
+    </div>
+
+    <div class="stack" style="margin-top:2rem">
+      <button class="btn ghost" id="save" type="button">שמירה ברשימה שלי</button>
+      <button class="btn ghost" id="again" type="button">דירה חדשה</button>
+    </div>
+  </section>
+
+  <section id="histSec" class="hidden">
+    <h2>הדירות ששמרתי</h2>
+    <ul class="hist" id="hist"></ul>
+  </section>
+</main>
+
+<script>
+// מחירון חציוני למ"ר (מחירי מבוקש, 28.10.26). רמב"ם ואברמוביץ' נמדדו מרשימה של ~40 מודעות; השאר הערכה גסה.
+const MEDIAN={"רמב\"ם":21700,"אברמוביץ'":22700,"רמז":21500,"כצנלסון":23000,"רמת אליהו":23000,"השומר":19500,"נווה ים":23000,"נחלת יהודה":24000,"נאות שקמה":24500,"קרית גנים":22500,"ראשונים":23500};
+const DEFAULT_MEDIAN=22000, BUDGET=1700000;
+const $=id=>document.getElementById(id);
+const nf=n=>Math.round(n).toLocaleString('he-IL');
+let photos=[];
+
+// שכונות
+const hoodSel=$('f_hood');
+hoodSel.innerHTML='<option value="">לא ידוע (ממוצע העיר)</option>'+Object.keys(MEDIAN).map(h=>`<option>${h}</option>`).join('');
+
+// תמונות
+$('photos').addEventListener('change',async e=>{
+  const files=[...e.target.files].slice(0,2);photos=[];$('photoRow').innerHTML='';
+  for(const f of files){photos.push(await shrink(f));}
+  $('photoRow').innerHTML=photos.map(p=>`<img src="${p}" alt="תמונת הדירה">`).join('');
+});
+function shrink(file){return new Promise(res=>{const r=new FileReader();r.onload=()=>{const i=new Image();i.onload=()=>{const k=Math.min(1,640/i.naturalWidth),c=document.createElement('canvas');c.width=i.naturalWidth*k;c.height=i.naturalHeight*k;c.getContext('2d').drawImage(i,0,0,c.width,c.height);res(c.toDataURL('image/jpeg',.7))};i.src=r.result};r.readAsDataURL(file)})}
+
+// קריאת המודעה
+function parse(t){
+  const o={};const clean=t.replace(/[‎‏]/g,'');
+  // מחיר
+  let price=null;
+  const mill=clean.match(/(\d(?:\.\d{1,2})?)\s*מיליון/);
+  const nums=[...clean.matchAll(/(\d{1,3}(?:,\d{3})+|\d{6,8})/g)].map(m=>({v:+m[1].replace(/,/g,''),i:m.index})).filter(x=>x.v>=300000&&x.v<=6000000);
+  if(nums.length){
+    const nw=nums.find(x=>/חדש/.test(clean.slice(Math.max(0,x.i-25),x.i)));
+    const pr=nums.find(x=>/מחיר|שיווק|מבוקש|ב-/.test(clean.slice(Math.max(0,x.i-30),x.i)));
+    price=(nw||pr||nums[0]).v;
+  }else if(mill)price=Math.round(parseFloat(mill[1])*1e6);
+  o.price=price;
+  // מ"ר
+  const sq=clean.match(/(?:כ-?\s*)?(\d{2,3})\s*(?:מ["״'׳]?ר|מטר)/);o.sqm=sq?+sq[1]:null;
+  // חדרים
+  const rm=clean.match(/(\d(?:\.5)?)\s*חדרים/)||clean.match(/דירת\s*(\d(?:\.5)?)\s*חד/);o.rooms=rm?+rm[1]:null;
+  // קומה
+  if(/קומת\s*קרקע|קומה\s*קרקע|קרקע/.test(clean)&&!/קומה\s*\d/.test(clean))o.floor=0;
+  const fl=clean.match(/קומה\s*(\d{1,2})/);if(fl)o.floor=+fl[1];
+  // מעלית
+  o.lift=/מעלית/.test(clean)&&!/(ללא|בלי|אין)\s*מעלית/.test(clean);
+  // מצב
+  if(/דרוש(?:ה)?\s*שיפוץ|טעונה\s*שיפוץ|לשיפוץ/.test(clean))o.cond='need';
+  else if(/משופצת|שופצה|משופץ|שיפוץ\s*(?:מלא|יסודי)|חדשה\s*מקבלן/.test(clean))o.cond='reno';
+  else if(/שמורה|במצב\s*(?:טוב|מצוין|שמור)/.test(clean))o.cond='ok';else o.cond='unk';
+  // שכירות
+  const rn=clean.match(/(?:מושכרת|שכירות|משכירה|מכניסה|מניבה)[^\d]{0,15}(\d[\d,]{2,6})/);
+  if(rn){const v=+rn[1].replace(/,/g,'');if(v>=1500&&v<=20000)o.rent=v;}
+  // שכונה
+  o.hood=Object.keys(MEDIAN).find(h=>clean.includes(h.replace(/"/g,'')) || clean.includes(h)||clean.includes(h.replace(/"/g,'״')))||'';
+  // טלפון (האחרון במודעה)
+  const ph=[...clean.matchAll(/(?:\+?972[-\s]?|0)(5\d)[-\s]?(\d{3})[-\s]?(\d{4})/g)];
+  if(ph.length){const m=ph[ph.length-1];o.phone='0'+m[1]+'-'+m[2]+m[3];}
+  else{const l=[...clean.matchAll(/\b0([2-489])[-\s]?(\d{3})[-\s]?(\d{4})\b/g)];if(l.length){const m=l[l.length-1];o.phone='0'+m[1]+'-'+m[2]+m[3];}}
+  // כתובת
+  const street=clean.match(/(?:רחוב|רח['׳]|ברחוב)\s+([^\n,.🔹🌹•*]{2,30}?)(?:\s*\d{1,3})?(?=\n|,|\.|\s{2}|$)/);
+  const first=clean.split('\n').map(s=>s.replace(/[^֐-׿0-9 '"״׳,.\-]/g,'').trim()).find(s=>s.length>3);
+  o.addr=(street?street[0].replace(/^ברחוב\s+|^רחוב\s+/,''):first||'').replace(/\s*(ראשון לציון|שכונת|שכונה|\().*$/,'').replace(/[.,\s]+$/,'').slice(0,50);
+  return o;
+}
+
+// ציון
+function evaluate(d){
+  const lines=[];let s=5;
+  const med=MEDIAN[d.hood]||DEFAULT_MEDIAN;
+  const meas=d.hood==="רמב\"ם"||d.hood==="אברמוביץ'";
+  if(d.price&&d.sqm){
+    const pp=d.price/d.sqm,pct=(med-pp)/med;
+    s+=pct*18;
+    const abs=Math.abs(Math.round(pct*100));
+    lines.push(`מחיר למ"ר: ${nf(pp)} ₪. ${pct>=0.02?abs+'% מתחת':pct<=-0.02?abs+'% מעל':'בערך כמו'} הרגיל ב${d.hood||'ראשון לציון'} (כ-${nf(med)} ₪)${meas?'':' - ההשוואה לשכונה הזו משוערת'}.`);
+  }else lines.push('חסרים מחיר או מ"ר, אז אי אפשר להשוות לשוק.');
+  if(d.cond==='reno'){s+=.7;lines.push('הדירה משופצת, וזה חוסך כסף ועבודה.');}
+  else if(d.cond==='need'){s-=.8;lines.push('דורשת שיפוץ. כדאי להוסיף לחשבון כ-150 עד 250 אלף ₪ (הערכה גסה).');}
+  else if(d.cond==='unk')lines.push('לא כתוב מה מצב הדירה. שווה לשאול.');
+  if(d.rent&&d.price){
+    const y=d.rent*12/d.price*100;
+    lines.push(`מושכרת ב-${nf(d.rent)} ₪, כלומר תשואה של ${y.toFixed(1)}% בשנה. ${y>=4.5?'תשואה טובה.':y<3.2?'תשואה נמוכה.':'תשואה סבירה.'} שימו לב: אי אפשר להיכנס לגור עד סוף החוזה.`);
+    if(y>=4.5)s+=.5;else if(y<3.2)s-=.3;
+  }
+  if(!d.lift&&d.floor>=3){s-=.7;lines.push(`קומה ${d.floor} בלי מעלית. זה מוריד בערך ויקשה על מכירה בעתיד.`);}
+  else if(d.floor===0){s-=.3;lines.push('קומת קרקע. פחות מבוקשת, אבל לפעמים יש חצר.');}
+  if(d.price>BUDGET){s-=.5;lines.push(`המחיר גבוה מהתקרה (${nf(BUDGET)} ₪). שווה לנסות להוריד.`);}
+  const score=Math.max(1,Math.min(10,Math.round(s)));
+  const verdict=score>=8?'כדאי מאוד':score>=6?'כדאי':score===5?'בינוני':'יקר';
+  const cls=score>=8?'good':score>=6?'good':score===5?'mid':'bad';
+  return{score,verdict,cls:score>=6?(score>=8?'good':'good'):score===5?'mid':'bad',lines};
+}
+
+// הודעה
+function buildMsg(d){
+  const where=[d.addr,d.hood&&!(d.addr||'').includes(d.hood)?d.hood:''].filter(Boolean).join(', ');
+  const q=[];
+  if(d.sqm)q.push('כמה מ"ר בטאבו וכמה בנוי?');
+  if(!d.lift||d.floor>=3)q.push('יש מעלית?');
+  if(d.cond!=='reno')q.push('מה מצב הדירה, ומתי שופצה לאחרונה?');
+  if(d.rent)q.push('מה גובה השכירות, עד מתי החוזה, ואפשר לקבל עותק ממנו?');
+  q.push('למה מוכרים, ויש גמישות במחיר?');
+  let t=`שלום, ראיתי את המודעה${where?' של הדירה ב'+where:''}${d.price?' במחיר '+nf(d.price)+' ₪':''}. אשמח לשמוע פרטים ולתאם לראות אותה.\nכמה שאלות:\n`+q.slice(0,5).map((x,i)=>`${i+1}. ${x}`).join('\n');
+  const name=$('f_name').value.trim();
+  t+=`\nתודה${name?',\n'+name:''}`;
+  return t;
+}
+function waLink(phone,text){
+  const p=(phone||'').replace(/\D/g,'');
+  if(!/^05\d{8}$/.test(p))return null;
+  return 'https://wa.me/972'+p.slice(1)+'?text='+encodeURIComponent(text);
+}
+
+// מצב נוכחי
+function read(){return{addr:$('f_addr').value.trim(),price:+$('f_price').value||0,sqm:+$('f_sqm').value||0,rooms:+$('f_rooms').value||0,
+  floor:$('f_floor').value===''?null:+$('f_floor').value,hood:$('f_hood').value,cond:$('f_cond').value,rent:+$('f_rent').value||0,lift:$('f_lift').checked,phone:$('f_phone').value.trim()}}
+function render(){
+  const d=read(),e=evaluate({...d,floor:d.floor==null?0:d.floor});
+  $('score').className='score '+e.cls;
+  $('score').innerHTML=`<div class="num">${e.score}<small>מתוך 10</small></div><div class="verdict">${e.verdict}</div><div class="bar" aria-hidden="true">${Array.from({length:10},(_,i)=>`<i class="${i<e.score?'on':''}"></i>`).join('')}</div>`;
+  $('why').innerHTML=e.lines.map(l=>`<li>${l}</li>`).join('');
+  const m=buildMsg(d);$('msg').textContent=m;
+  const link=waLink(d.phone,m),wa=$('wa');
+  if(link){wa.href=link;wa.classList.remove('off');$('waNote').textContent='ייפתח וואטסאפ עם ההודעה מוכנה. אתם לוחצים על שליחה בעצמכם.';}
+  else{wa.href='#';wa.classList.add('off');$('waNote').textContent=d.phone?'המספר הזה לא נייד (למשל מספר 073), ולכן אי אפשר לפתוח וואטסאפ. אפשר להעתיק את ההודעה ולשלוח בהודעת טקסט.':'לא נמצא טלפון נייד במודעה. הוסיפו אותו למעלה.';}
+  window._cur={d,e};
+}
+['f_addr','f_price','f_sqm','f_rooms','f_floor','f_hood','f_cond','f_rent','f_lift','f_phone','f_name'].forEach(id=>$(id).addEventListener('input',()=>{if(id==='f_name')localStorage.setItem('dirot_name',$(id).value);render()}));
+try{$('f_name').value=localStorage.getItem('dirot_name')||''}catch(e){}
+
+$('go').addEventListener('click',()=>{
+  const t=$('ad').value.trim();
+  if(t.length<15){$('ad').focus();$('ad').style.borderColor='var(--bad)';return}
+  $('ad').style.borderColor='';
+  const o=parse(t);
+  $('f_addr').value=o.addr||'';$('f_price').value=o.price||'';$('f_sqm').value=o.sqm||'';$('f_rooms').value=o.rooms||'';
+  $('f_floor').value=o.floor==null?'':o.floor;$('f_hood').value=o.hood||'';$('f_cond').value=o.cond;$('f_rent').value=o.rent||'';
+  $('f_lift').checked=!!o.lift;$('f_phone').value=o.phone||'';
+  $('resSec').classList.remove('hidden');render();
+  $('resSec').scrollIntoView({behavior:'smooth',block:'start'});
+});
+$('copy').addEventListener('click',async()=>{try{await navigator.clipboard.writeText($('msg').textContent);$('copy').textContent='ההודעה הועתקה';setTimeout(()=>$('copy').textContent='העתקת ההודעה',2000)}catch(e){const r=document.createRange();r.selectNodeContents($('msg'));getSelection().removeAllRanges();getSelection().addRange(r)}});
+$('again').addEventListener('click',()=>{$('ad').value='';photos=[];$('photoRow').innerHTML='';$('photos').value='';$('resSec').classList.add('hidden');window.scrollTo({top:0,behavior:'smooth'})});
+
+// רשימה שמורה
+function loadH(){try{return JSON.parse(localStorage.getItem('dirot_list')||'[]')}catch(e){return[]}}
+function drawH(){
+  const l=loadH().sort((a,b)=>b.score-a.score);$('histSec').classList.toggle('hidden',!l.length);
+  $('hist').innerHTML=l.map((x,i)=>`<li><div class="s ${x.cls}">${x.score}</div><div class="t"><b>${x.addr||'ללא כתובת'}</b><span>${x.price?nf(x.price)+' ₪':''}${x.sqm?' · '+x.sqm+' מ"ר':''}${x.phone?' · '+x.phone:''}</span></div><button class="btn ghost" style="width:auto;min-height:3rem;font-size:1rem" data-del="${i}" type="button">מחיקה</button></li>`).join('');
+  $('hist').querySelectorAll('[data-del]').forEach(b=>b.onclick=()=>{const l2=loadH().sort((a,b)=>b.score-a.score);l2.splice(+b.dataset.del,1);localStorage.setItem('dirot_list',JSON.stringify(l2));drawH()});
+}
+$('save').addEventListener('click',()=>{
+  const{d,e}=window._cur;const l=loadH();
+  l.push({addr:d.addr,price:d.price,sqm:d.sqm,phone:d.phone,score:e.score,cls:e.cls});
+  try{localStorage.setItem('dirot_list',JSON.stringify(l))}catch(err){}
+  drawH();$('save').textContent='נשמר';setTimeout(()=>$('save').textContent='שמירה ברשימה שלי',2000);
+});
+drawH();
+</script>
+</body>
+</html>
